@@ -2,13 +2,12 @@
   import { type Resistor } from "./resistor";
   import ResistorElement from "./ResistorElement.svelte";
 
-  export let resistor: Resistor
+  export let resistors: Array<Resistor>
 </script>
 
-<div class="board">
-  <ResistorElement {resistor}/>
-</div>
-<p>Resistance: {resistor.value}Ω, Resistors: {resistor.complexity}</p>
+<table class="table">
+  <<ResistorElement {resistor}/>>
+</table>
 
 <style>
 .board {
