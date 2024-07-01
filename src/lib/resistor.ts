@@ -5,9 +5,29 @@ export type Resistor = {
   subResistors?: Array<Resistor>
 }
 
-function delay(time) {
-  return new Promise(resolve => setTimeout(resolve, time));
-}
+Array.prototype.pushSorted = function(el, compareFn) {
+  let index = (function(arr) {
+    var m = 0;
+    var n = arr.length - 1;
+
+    while(m <= n) {
+      var k = (n + m) >> 1;
+      var cmp = compareFn(el, arr[k]);
+
+      if(cmp > 0) m = k + 1
+      else if(cmp < 0) n = k - 1
+      else return k
+    }
+    return -m - 1;
+  })(this);
+
+  if (index >= 0)
+    this.splice(index, 0, el);
+  else if (index < 0)
+    this.splice((index * -1) - 1, 0, el);
+
+  return this.length;
+};
 
 let initialResistors: Resistor[] = [
   {
@@ -27,12 +47,12 @@ let initialResistors: Resistor[] = [
   },
 ]
 
-export function generateResistors(resistors: Array<Resistor>, desiredResistance: number, maxComplexity: number): Array<Resistor> {
+export async function generateResistors(resistors: Array<Resistor>, desiredResistance: number, maxComplexity: number) {
   let resistorQueue: Array<Resistor> = initialResistors.slice(0)
 
   while (resistorQueue.length) {
     const resistor1: Resistor = resistorQueue.shift()
-    resistors.push(resistor1)
+    resistors.pushSorted(resistor1, (a, b) => Math.abs(a.value - desiredResistance) - Math.abs(b.value - desiredResistance))
     if (resistor1.complexity >= maxComplexity) {
       continue
     }
@@ -51,8 +71,6 @@ export function generateResistors(resistors: Array<Resistor>, desiredResistance:
       }
     }
   }
-
-  resistors.sort((a, b) => Math.abs(a.value - desiredResistance) - Math.abs(b.value - desiredResistance))
 }
 
 function chain(resistor1: Resistor, resistor2: Resistor): Resistor {

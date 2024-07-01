@@ -25,8 +25,9 @@
     // get results
     resistors = []
     generateResistors(resistors, desiredResistance, maxComplexity)
-    console.log(resistors)
   }
+
+  $: res = resistors
 
 </script>
 
@@ -47,9 +48,9 @@
     {/if}
   </div>
 
-  {#if resistors.length > 0}
-    <Board resistor={resistors[0]} />
-    <Table resistors={resistors} desiredResistance={desiredResistance} />
+  {#if res.length > 0}
+    <Board resistor={res[0]} />
+    <Table resistors={res} desiredResistance={desiredResistance} />
   {/if}
 
 </main>
