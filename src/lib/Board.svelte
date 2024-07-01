@@ -1,19 +1,27 @@
 <script lang="ts">
   import { type Resistor } from "./resistor";
   import ResistorElement from "./ResistorElement.svelte";
+  import Table from "./Table.svelte";
 
   export let resistor: Resistor
+  export let desiredResistance: number
 </script>
 
-<div class="board">
-  <ResistorElement {resistor}/>
+<div class="wrapper">
+  <div class="board">
+    <ResistorElement {resistor}/>
+  </div>
+  <Table resistors={[resistor]} desiredResistance={desiredResistance} />
 </div>
-<p>Resistance: {resistor.value}Ω, Resistors: {resistor.complexity}</p>
 
 <style>
+.wrapper {
+  margin-bottom: 1.5rem;
+}
+
 .board {
   padding: 2em;
-  background-color: blueviolet;
+  background-color: rgba(128, 128, 128, .2);
   display: flex;
   justify-content: center;
   flex-direction: column;

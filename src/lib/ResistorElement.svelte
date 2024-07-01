@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { numberToPrettyString } from "./formatting";
   import { type Resistor } from "./resistor";
 
   export let resistor: Resistor
@@ -21,7 +22,7 @@
 {:else}
   <div class="chain-element">
     <div class="spacer"/>
-    <div class="resistor">{resistor.value}Ω</div>
+    <div class="resistor"><div class="resistor-text">{numberToPrettyString(resistor.value)}Ω</div></div>
     <div class="spacer"/>
   </div>
 {/if}
@@ -31,18 +32,34 @@
   --resistor-width: 2em;
   --resistor-height: 4em;
   --resistor-border: 4px;
+  --resistor-color: rgb(175, 85, 21);
+  --resistor-border-color: black;
   --padding: 1em;
 }
 
 .resistor {
   width: var(--resistor-width);
   height: var(--resistor-height);
-  border: var(--resistor-border) solid black;
-  background-color: coral;
+  border: var(--resistor-border) solid var(--resistor-border-color);
+  background-color: var(--resistor-color);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
+}
+
+.resistor-text {
+  width: fit-content;
+  background-color: rgba(0, 0, 0, .9);
+  color: var(--resistor-color);
+  padding: .05em .15em;
+}
+
+@media (prefers-color-scheme: light) {
+  .resistor-text {
+    background-color: rgba(255, 255, 255, .9);
+    color: rgba(0, 0, 0, .9);
+  }
 }
 
 .chain-element {
@@ -68,13 +85,13 @@
   bottom: calc(0em - var(--resistor-border) / 2);
   left: calc(var(--resistor-width) / 2 + var(--resistor-border) / 2);
   right: calc(var(--resistor-width) / 2 + var(--resistor-border) / 2);
-  border-top: var(--resistor-border) solid black;
-  border-bottom: var(--resistor-border) solid black;
+  border-top: var(--resistor-border) solid var(--resistor-border-color);
+  border-bottom: var(--resistor-border) solid var(--resistor-border-color);
 }
 
 .spacer {
   min-height: var(--padding);
   flex-grow: 1;
-  border-left: var(--resistor-border) solid black;
+  border-left: var(--resistor-border) solid var(--resistor-border-color);
 }
 </style>

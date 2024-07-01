@@ -29,47 +29,78 @@ Array.prototype.pushSorted = function(el, compareFn) {
   return this.length;
 };
 
-let initialResistors: Resistor[] = [
+function compareFn(a: Resistor, b: Resistor, desiredResistance: number) {
+  let dist = Math.abs(a.value - desiredResistance) - Math.abs(b.value - desiredResistance)
+  if (dist === 0) {
+    dist = a.complexity - b.complexity
+  }
+  return dist
+}
+
+export let initialResistors: Resistor[] = [
   {
-    value: 10,
+    value: 12500000,
     complexity: 1,
     type: "resistor"
   },
   {
-    value: 1,
+    value: 150000,
     complexity: 1,
     type: "resistor"
   },
   {
-    value: 200,
+    value: 224000,
     complexity: 1,
     type: "resistor"
   },
 ]
 
-export async function generateResistors(resistors: Array<Resistor>, desiredResistance: number, maxComplexity: number) {
-  let resistorQueue: Array<Resistor> = initialResistors.slice(0)
+export class ResistanceGenerator {
+  resistorQueue: Array<Resistor>
+  resistors: Array<Resistor>
+  desiredResistance: number
+  maxComplexity: number
 
-  while (resistorQueue.length) {
-    const resistor1: Resistor = resistorQueue.shift()
-    resistors.pushSorted(resistor1, (a, b) => Math.abs(a.value - desiredResistance) - Math.abs(b.value - desiredResistance))
-    if (resistor1.complexity >= maxComplexity) {
-      continue
+  constructor(initialResistors: Array<Resistor>, desiredResistance: number, maxComplexity: number) {
+    this.resistorQueue = initialResistors.slice(0)
+    this.resistors = []
+    this.desiredResistance = desiredResistance
+    this.maxComplexity = maxComplexity
+  }
+
+  generateStep(): boolean {
+    if (this.resistorQueue.length === 0) {
+      return false
     }
-    const allowedComplexity = maxComplexity - resistor1.complexity
-
-    for (const resistor2 of resistors) {
+    const resistor1 = this.resistorQueue.shift()
+    this.resistors.pushSorted(resistor1, (a, b) => compareFn(a, b, this.desiredResistance))
+    if (resistor1.complexity >= this.maxComplexity) {
+      return true
+    }
+    const allowedComplexity = this.maxComplexity - resistor1.complexity
+    for (const resistor2 of this.resistors) {
       if (resistor2.complexity > allowedComplexity) {
         continue
       }
-      
-      if (resistor1.type != "chain" || resistor2.type != "chain") {
-        resistorQueue.push(chain(resistor1, resistor2))
+
+      if (resistor1.type !== 'chain' || resistor2.type !== 'chain') {
+        let chainResistor = chain(resistor1, resistor2)
+        this.resistorQueue.pushSorted(chainResistor, (a, b) => compareFn(a, b, this.desiredResistance))
       }
-      if (resistor1.type != "parallel" || resistor2.type != "parallel") {
-        resistorQueue.push(parallel(resistor1, resistor2))
+      if (resistor1.type !== 'parallel' || resistor2.type !== 'parallel') {
+        let parallelResistor = parallel(resistor1, resistor2)
+        this.resistorQueue.pushSorted(parallelResistor, (a, b) => compareFn(a, b, this.desiredResistance))
       }
     }
+    return true
+  }
+
+  generate(): Array<Resistor> {
+    let result
+    do {
+      result = this.generateStep()
+    } while (result)
+    return this.resistors
   }
 }
 
@@ -86,13 +117,12 @@ function chain(resistor1: Resistor, resistor2: Resistor): Resistor {
     subResistors.push(resistor2)
   }
 
-  const newResistor: Resistor = {
+  return {
     value: resistor1.value + resistor2.value,
     complexity: resistor1.complexity + resistor2.complexity,
     type: "chain",
     subResistors,
   }
-  return newResistor
 }
 
 function parallel(resistor1: Resistor, resistor2: Resistor): Resistor {
@@ -108,11 +138,10 @@ function parallel(resistor1: Resistor, resistor2: Resistor): Resistor {
     subResistors.push(resistor2)
   }
 
-  const newResistor: Resistor = {
+  return {
     value: (resistor1.value * resistor2.value) / (resistor1.value + resistor2.value),
     complexity: resistor1.complexity + resistor2.complexity,
     type: "parallel",
     subResistors,
   }
-  return newResistor
 }
