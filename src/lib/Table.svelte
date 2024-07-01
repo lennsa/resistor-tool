@@ -1,45 +1,36 @@
 <script lang="ts">
   import { type Resistor } from "./resistor";
-  import ResistorElement from "./ResistorElement.svelte";
 
   export let resistors: Array<Resistor>
+  export let desiredResistance: number
+
+  function precision(n: number) {
+    return (n<0?"":(n===0?"±":"+")) + n.toPrecision(4)
+  }
 </script>
 
 <table class="table">
-  <<ResistorElement {resistor}/>>
+  <tr>
+    <th>resistance</th>
+    <th>n resistors</th>
+    <th>delta in Ω</th>
+    <th>delta in %</th>
+  </tr>
+  {#each resistors as resistor}
+    <tr>
+      <td>{resistor.value.toPrecision(4)}Ω</td>
+      <td>{resistor.complexity}</td>
+      <td>{precision(resistor.value - desiredResistance)}Ω</td>
+      <td>{precision((resistor.value - desiredResistance) / desiredResistance * 100)}%</td>
+    </tr>
+  {/each}
 </table>
 
 <style>
-.board {
-  padding: 2em;
-  background-color: blueviolet;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
+table {
+  width: 100%;
 }
-
-.board::before {
-  position: absolute;
-  content: "";
-  width: calc(1em - var(--resistor-border) * 2);
-  height: calc(1em - var(--resistor-border) * 2);
-  left: calc(50% - 0.5em);
-  border-radius: 1em;
-  top: 1em;
-  border: var(--resistor-border) solid black;
+td, th {
+  text-align: left;
 }
-
-.board::after {
-  position: absolute;
-  content: "";
-  width: calc(1em - var(--resistor-border) * 2);
-  height: calc(1em - var(--resistor-border) * 2);
-  left: calc(50% - 0.5em);
-  border-radius: 1em;
-  bottom: 1em;
-  border: var(--resistor-border) solid black;
-}
-
 </style>

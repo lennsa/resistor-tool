@@ -5,50 +5,54 @@ export type Resistor = {
   subResistors?: Array<Resistor>
 }
 
-export function generateResistors(maxComplexity: number): Array<Resistor> {
-  let resistors: Array<Resistor> = []
-  let resistorQueue: Array<Resistor> = []
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
 
-  // TODO: initialize resistorQueue to both lists
-  let initResistor1: Resistor = {
+let initialResistors: Resistor[] = [
+  {
     value: 10,
     complexity: 1,
     type: "resistor"
-  }
-  let initResistor2: Resistor = {
+  },
+  {
     value: 1,
     complexity: 1,
     type: "resistor"
-  }
-  resistorQueue.push(initResistor1)
-  resistorQueue.push(initResistor2)
-  
-  while (resistorQueue.length) {
-    const resistor1: Resistor = resistorQueue.pop()
-    resistors.push(resistor1)
+  },
+  {
+    value: 200,
+    complexity: 1,
+    type: "resistor"
+  },
+]
 
-    if (resistor1.complexity === maxComplexity) {
+export function generateResistors(resistors: Array<Resistor>, desiredResistance: number, maxComplexity: number): Array<Resistor> {
+  let resistorQueue: Array<Resistor> = initialResistors.slice(0)
+
+  while (resistorQueue.length) {
+    const resistor1: Resistor = resistorQueue.shift()
+    resistors.push(resistor1)
+    if (resistor1.complexity >= maxComplexity) {
       continue
     }
-    let allowedComplexity: number = maxComplexity - resistor1.complexity
+    const allowedComplexity = maxComplexity - resistor1.complexity
 
-    let newResistors: Array<Resistor> = []
     for (const resistor2 of resistors) {
-
       if (resistor2.complexity > allowedComplexity) {
         continue
       }
       
       if (resistor1.type != "chain" || resistor2.type != "chain") {
-        newResistors.push(chain(resistor1, resistor2))
+        resistorQueue.push(chain(resistor1, resistor2))
       }
       if (resistor1.type != "parallel" || resistor2.type != "parallel") {
-        newResistors.push(parallel(resistor1, resistor2))
+        resistorQueue.push(parallel(resistor1, resistor2))
       }
     }
-    resistorQueue = resistorQueue.concat(newResistors)
   }
-  return resistors
+
+  resistors.sort((a, b) => Math.abs(a.value - desiredResistance) - Math.abs(b.value - desiredResistance))
 }
 
 function chain(resistor1: Resistor, resistor2: Resistor): Resistor {
@@ -64,13 +68,13 @@ function chain(resistor1: Resistor, resistor2: Resistor): Resistor {
     subResistors.push(resistor2)
   }
 
-  let newResistor: Resistor = {
+  const newResistor: Resistor = {
     value: resistor1.value + resistor2.value,
     complexity: resistor1.complexity + resistor2.complexity,
     type: "chain",
     subResistors,
   }
-  return newResistor 
+  return newResistor
 }
 
 function parallel(resistor1: Resistor, resistor2: Resistor): Resistor {
@@ -86,11 +90,11 @@ function parallel(resistor1: Resistor, resistor2: Resistor): Resistor {
     subResistors.push(resistor2)
   }
 
-  let newResistor: Resistor = {
+  const newResistor: Resistor = {
     value: (resistor1.value * resistor2.value) / (resistor1.value + resistor2.value),
     complexity: resistor1.complexity + resistor2.complexity,
     type: "parallel",
     subResistors,
   }
-  return newResistor 
+  return newResistor
 }

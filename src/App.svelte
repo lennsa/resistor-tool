@@ -1,8 +1,9 @@
 <script lang="ts">
   import Board from './lib/Board.svelte';
+  import Table from './lib/Table.svelte';
   import { type Resistor, generateResistors } from './lib/resistor';
 
-  let ohmStr: string = ""
+  let desiredResistanceStr: string = "0"
   let desiredResistance: number = 0
   let maxComplexity: number = 3
   let resistors: Array<Resistor> = []
@@ -14,15 +15,17 @@
 
     // get desired resistance
     let mul: number = 1
-    if (ohmStr.indexOf('k') >= 0) {
+    if (desiredResistanceStr.indexOf('k') >= 0) {
       mul *= 1000
-    } else if (ohmStr.indexOf('M') >= 0) {
+    } else if (desiredResistanceStr.indexOf('M') >= 0) {
       mul *= 1000000
     }
-    desiredResistance = mul * Number(ohmStr.replace(/[k,M]/g,''))
+    desiredResistance = mul * Number(desiredResistanceStr.replace(/[k,M]/g,''))
 
     // get results
-    resistors = generateResistors(maxComplexity)
+    resistors = []
+    generateResistors(resistors, desiredResistance, maxComplexity)
+    console.log(resistors)
   }
 
 </script>
@@ -32,7 +35,7 @@
 
   <div class="card">
     <label for="resistor">desired resistance</label>
-    <input id="resistor" bind:value={ohmStr}>
+    <input id="resistor" bind:value={desiredResistanceStr}>
     <label for="complexity">max resistors</label>
     <input id="complexity" type="number" bind:value={maxComplexity}>
     <button on:click={calculate}>
@@ -44,11 +47,9 @@
     {/if}
   </div>
 
-  {#if resistors.length}
-     <Board resistor={resistors[0]}/>
+  {#if resistors.length > 0}
+    <Board resistor={resistors[0]} />
+    <Table resistors={resistors} desiredResistance={desiredResistance} />
   {/if}
 
-  {#each resistors as resistor}
-     <Board resistor={resistor}/>
-  {/each}
 </main>
