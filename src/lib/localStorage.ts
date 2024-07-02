@@ -3,7 +3,7 @@ import type { Resistor } from "./resistor"
 export type Settings = {
   desiredResistance: number
   maxComplexity: number
-  collections: Array<{name: string, id: string}>
+  collections: {[key: string]: string}
   selectedCollection: string
 }
 

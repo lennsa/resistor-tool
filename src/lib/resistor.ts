@@ -2,7 +2,7 @@ export type Resistor = {
   value: number
   complexity: number
   type: "resistor" | "parallel" | "chain"
-  subResistors?: Array<Resistor>
+  subResistors: Array<Resistor>
 }
 
 Array.prototype.pushSorted = function(el, compareFn) {

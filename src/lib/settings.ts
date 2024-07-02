@@ -1,12 +1,9 @@
-import { loadCollectionFile, loadSettingsFile, saveCollectionFile, saveSettingsFile, type Settings } from "./localStorrge";
+import { loadCollectionFile, loadSettingsFile, saveCollectionFile, saveSettingsFile, type Settings } from "./localStorage";
 import type { Resistor } from "./resistor";
 
-export function setSettings(newSettings: Settings): Settings {
-  let settings: Settings = getSettings()
-  settings.desiredResistance = newSettings.desiredResistance
-  settings.maxComplexity = newSettings.maxComplexity
+export function setSettings(settings: Settings): Settings {
+  // TODO: check only modified collections not added or deleted
   // TODO: check only existing collection is selected
-  settings.selectedCollection = newSettings.selectedCollection
   saveSettingsFile(settings)
   return settings
 }
@@ -17,7 +14,7 @@ export function getSettings(): Settings {
     settings = {
       desiredResistance: 100,
       maxComplexity: 4,
-      collections: [],
+      collections: {},
       selectedCollection: null,
     }
     saveSettingsFile(settings)
@@ -26,20 +23,16 @@ export function getSettings(): Settings {
   return settings
 }
 
-export function addCollection(id: string, name: string, resistors: Array<Resistor>): Settings {
-  let settings: Settings = getSettings()
+export function addCollection(settings: Settings, id: string, name: string, resistors: Array<Resistor>): Settings {
   // TODO: check if id is no duplicate in settings
   saveCollectionFile(id, resistors)
-  settings.collections.push({
-    id: id,
-    name: name,
-  })
+  console.log(settings)
+  settings.collections[id] = name
   saveSettingsFile(settings)
   return settings
 }
 
-export function setCollection(id: string, resistors: Array<Resistor>): Settings {
-  let settings: Settings = getSettings()
+export function setCollection(settings: Settings, id: string, resistors: Array<Resistor>): Settings {
   // TODO: check if collection exists in settings
   saveCollectionFile(id, resistors)
   saveSettingsFile(settings)
