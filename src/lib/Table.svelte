@@ -13,10 +13,10 @@
 
 <table class="table">
   <tr>
-    <th>resistance</th>
-    <th>n resistors</th>
-    <th>delta in Ω</th>
-    <th>delta in %</th>
+    <th>Widerstand</th>
+    <th>Anzahl einzelner Widerstände</th>
+    <th>Abweichung in Ω</th>
+    <th>Abweichung in %</th>
   </tr>
   {#each resistors as resistor, index}
     <tr
@@ -48,10 +48,20 @@ tr.resistor {
 }
 
 tr.resistor:hover {
-  background-color: rgba(128, 128, 128, .3);
+  background-color: #1c1c1c;
 }
 
 tr.resistor.selected {
-  background-color: rgba(128, 128, 128, .5);
+  background-color: #151515;
+}
+
+@media (prefers-color-scheme: light) {
+  tr.resistor:hover {
+    background-color: #eaeaea;
+  }
+
+  tr.resistor.selected {
+    background-color: #dadada;
+  }
 }
 </style>

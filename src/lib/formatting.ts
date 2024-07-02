@@ -21,12 +21,19 @@ export function numberToPrettyString(n: number, allSign: boolean = false, precis
         case 3:
             eStr = "G"; break
     }
-    if (precision !== undefined) n = parseFloat(n.toFixed(precision))
+    if (precision !== undefined) {
+      let pN: number
+      do {
+        pN = parseFloat(n.toFixed(precision))
+        precision++
+      } while (pN === 0 && precision < 12)
+      n = pN
+    }
     return sStr + n.toString() + eStr
 }
 
 export function prettyStringToNumber(str: string) {
-    let e:number = 1
+    let e: number = 1
     if (str.indexOf('k') >= 0) {
       e *= 1000
     } else if (str.indexOf('M') >= 0) {
@@ -38,6 +45,13 @@ export function prettyStringToNumber(str: string) {
 }
 
 export function allSign(n: number, precision: number = undefined) {
-  if (precision !== undefined) n = parseFloat(n.toFixed(precision))
+  if (precision !== undefined) {
+    let pN: number
+    do {
+      pN = parseFloat(n.toFixed(precision))
+      precision++
+    } while (pN === 0 && precision < 12)
+    n = pN
+  }
   return (n<0?"":(n===0?"±":"+")) + n
 }

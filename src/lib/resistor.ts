@@ -37,32 +37,14 @@ function compareFn(a: Resistor, b: Resistor, desiredResistance: number) {
   return dist
 }
 
-export let initialResistors: Resistor[] = [
-  {
-    value: 12500000,
-    complexity: 1,
-    type: "resistor"
-  },
-  {
-    value: 150000,
-    complexity: 1,
-    type: "resistor"
-  },
-  {
-    value: 224000,
-    complexity: 1,
-    type: "resistor"
-  },
-]
-
 export class ResistanceGenerator {
   resistorQueue: Array<Resistor>
   resistors: Array<Resistor>
   desiredResistance: number
   maxComplexity: number
 
-  constructor(initialResistors: Array<Resistor>, desiredResistance: number, maxComplexity: number) {
-    this.resistorQueue = initialResistors.slice(0)
+  constructor(collection: Array<Resistor>, desiredResistance: number, maxComplexity: number) {
+    this.resistorQueue = collection.slice(0)
     this.resistors = []
     this.desiredResistance = desiredResistance
     this.maxComplexity = maxComplexity

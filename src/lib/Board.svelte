@@ -7,26 +7,28 @@
   export let desiredResistance: number
 </script>
 
-<div class="wrapper">
-  <div class="board">
-    <ResistorElement {resistor}/>
-  </div>
-  <Table resistors={[resistor]} desiredResistance={desiredResistance} />
+<div class="board">
+  <ResistorElement {resistor}/>
 </div>
+<Table resistors={[resistor]} desiredResistance={desiredResistance} />
 
 <style>
-.wrapper {
-  margin-bottom: 1.5rem;
-}
-
 .board {
   padding: 2em;
-  background-color: rgba(128, 128, 128, .2);
+  background-color: #1c1c1c;
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
   position: relative;
+  border-radius: 4px;
+  margin-bottom: .5rem;
+}
+
+@media (prefers-color-scheme: light) {
+  .board {
+    background-color: #eaeaea;
+  }
 }
 
 .board::before {

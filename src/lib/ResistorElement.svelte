@@ -50,15 +50,16 @@
 
 .resistor-text {
   width: fit-content;
-  background-color: rgba(0, 0, 0, .9);
+  background-color: rgba(0, 0, 0, .8);
   color: var(--resistor-color);
-  padding: .05em .15em;
+  padding: .075em .25em;
 }
 
 @media (prefers-color-scheme: light) {
   .resistor-text {
-    background-color: rgba(255, 255, 255, .9);
-    color: rgba(0, 0, 0, .9);
+    background-color: rgba(255, 255, 255, .95);
+    /* color: rgba(0, 0, 0, .9); */
+    color: rgb(141, 62, 5);
   }
 }
 
