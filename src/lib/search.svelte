@@ -13,7 +13,7 @@
   export let showCollection: boolean
   export let newCollection: boolean
   
-  let state: "awaitInput" | "generating" | "done" | "paused" = 'awaitInput'
+  let state: "awaitInput" | "searching" | "done" | "paused" = 'awaitInput'
   let resistors: Array<Resistor> = []
   let nResistors: number = 0
   let showResultIndex: number = 0
@@ -27,7 +27,7 @@
     console.log(settings)
 
     // reset output
-    state = "generating"
+    state = "searching"
     resistors = []
     nResistors = 0
     showResultIndex = 0
@@ -38,7 +38,7 @@
     let interval = setInterval(() => {
       if (state === "paused") {
         return
-      } else if (state !== "generating") {
+      } else if (state !== "searching") {
         clearInterval(interval)
         return
       }
@@ -67,7 +67,7 @@
   }
   
   function resumeSearch() {
-    state = "generating"
+    state = "searching"
   }
 
   function openEditCollection() {
@@ -83,6 +83,8 @@
   }
 </script>
 
+<h2>Suche</h2>
+
 <form class="card" onsubmit="return false">
   <label for="collection">Sammlung</label>
   <select id="collection" bind:value={settings.selectedCollection} on:change={stopSearch}>
@@ -94,7 +96,7 @@
   </select>
   <div class="form-row">
     <button disabled={settings.selectedCollection === null} on:click={openEditCollection}>Sammlung Bearbeiten</button>
-    <button on:click={openAddCollection}>Sammlung Hinzufügen</button>
+    <button on:click={openAddCollection}>Neue Sammlung</button>
   </div>
 
   <label for="resistor">Gewünschter Widerstand in Ω</label>
@@ -103,7 +105,7 @@
   <label for="complexity">Maximale Anzahl an Widerständen</label>
   <input id="complexity" type="number" bind:value={settings.maxComplexity} on:input={stopSearch}>
 
-  {#if state === "generating"}
+  {#if state === "searching"}
     <button on:click={pauseSearch}>Pause</button>
   {:else if state === "paused"}
     <button on:click={resumeSearch}>Resume</button>
@@ -127,8 +129,9 @@
 {/if}
 
 {#if resistors.length > 0}
+  <h2>Ergebnisse</h2>
   <div class="card">
-  <Board resistor={resistors[showResultIndex]} desiredResistance={settings.desiredResistance} />
+    <Board resistor={resistors[showResultIndex]} desiredResistance={settings.desiredResistance} />
   </div>
   <div class="card">
     <Table resistors={resistors} bind:clickedRow={showResultIndex} desiredResistance={settings.desiredResistance} />

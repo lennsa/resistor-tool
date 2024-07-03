@@ -26,8 +26,14 @@ h1 {
   line-height: 1.1;
 }
 
+h2 {
+  font-size: 2.2em;
+  margin: 0;
+  text-align: left;
+}
+
 .card {
-  padding: 1em;
+  padding: 1em 0;
 }
 
 #app {

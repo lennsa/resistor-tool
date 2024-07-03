@@ -14,7 +14,7 @@
 <table class="table">
   <tr>
     <th>Widerstand</th>
-    <th>Anzahl einzelner Widerstände</th>
+    <th>Anzahl Widerstände</th>
     <th>Abweichung in Ω</th>
     <th>Abweichung in %</th>
   </tr>

@@ -13,8 +13,8 @@
 
   function saveCollection () {
     if (newCollection) {
-      if (name === "") name = "Sammlung"
-      let id: string = name.replace(/[^0-9A-Za-z]/g, '');
+      if (name === "") name = "Sammlung " + settings.collections.length
+      let id: string = window.crypto.randomUUID()
       settings = addCollection(settings, id, name, collection)
       settings.selectedCollection = id
     } else {
@@ -54,21 +54,27 @@
   }
 </script>
 
-<form onsubmit="return false">
+{#if newCollection}
+  <h2>Neue Sammlung</h2>
+{:else}
+  <h2>Sammlung Bearbeiten</h2>
+{/if}
+
+<form class="card" onsubmit="return false">
   <label for="name">Name der Sammlung</label>
   <input id="name" bind:value={name}>
 
   <label for="name">Widerstände</label>
   <table class="table">
     <tr>
-      <th>ID</th>
+      <th>Nr.</th>
       <th>Widerstand Eingabe</th>
       <th>Widerstand in Ω</th>
       <th>Löschen</th>
     </tr>
     {#each collection as resistor, index}
       <tr class="resistor">
-        <td>{index}</td>
+        <td>{index + 1}</td>
         <td><input id="resistor_{index}" type="number" bind:value={resistor.value}></td>
         <td>{numberToPrettyString(resistor.value, false, 3)}Ω</td>
         <td><button on:click={() => deleteResistor(index)}>Löschen</button></td>
