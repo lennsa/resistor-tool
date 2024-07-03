@@ -8,7 +8,7 @@
 </script>
 
 <div class="board">
-  <ResistorElement {resistor}/>
+  <ResistorElement resistor={resistor} />
 </div>
 <Table resistors={[resistor]} desiredResistance={desiredResistance} />
 
@@ -21,7 +21,7 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  border-radius: 4px;
+  border-radius: 8px;
   margin-bottom: .5rem;
 }
 

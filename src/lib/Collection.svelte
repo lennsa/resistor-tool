@@ -61,7 +61,7 @@
 {/if}
 
 <form class="card" onsubmit="return false">
-  <label for="name">Name der Sammlung</label>
+  <label for="name">Name</label>
   <input id="name" bind:value={name}>
 
   <label for="name">Widerstände</label>
@@ -75,23 +75,32 @@
     {#each collection as resistor, index}
       <tr class="resistor">
         <td>{index + 1}</td>
-        <td><input id="resistor_{index}" type="number" bind:value={resistor.value}></td>
-        <td>{numberToPrettyString(resistor.value, false, 3)}Ω</td>
-        <td><button on:click={() => deleteResistor(index)}>Löschen</button></td>
+        <td><input class="w-100" id="resistor_{index}" type="number" bind:value={resistor.value}></td>
+        <td><span class="ta-c">{numberToPrettyString(resistor.value, false, 3)}Ω</span></td>
+        <td><button class="w-100" on:click={() => deleteResistor(index)}>Löschen</button></td>
       </tr>
     {/each}
   </table>
   <button on:click={addResistor}>Widerstand Hinzufügen</button>
 
   <div class="form-row">
-    <button disabled={newCollection} on:click={deleteCollection}>Löschen</button>
-    <button on:click={cancelCollection}>Abbrechen</button>
-    <button on:click={saveCollection}>Speichern</button>
+    <div class="form-row-child">
+      <button disabled={newCollection} on:click={deleteCollection}>Löschen</button>
+    </div>
+    <div class="form-row-child">
+      <button on:click={cancelCollection}>Abbrechen</button>
+    </div>
+    <div class="form-row-child">
+      <button on:click={saveCollection}>Speichern</button>
+    </div>
   </div>
 </form>
 
 <style>
-  .form-row {
-    margin: .5rem 0 0;
+  table {
+    border-collapse: separate;
+    border-spacing: 1rem 0;
+    margin-left: -1rem;
+    margin-right: -1rem;
   }
 </style>

@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { Settings } from './lib/localStorage';
   import { getSettings } from './lib/settings';
-  import Search from './lib/search.svelte';
-  import Collection from './lib/collection.svelte';
+  import Search from './lib/Search.svelte';
+  import Collection from './lib/Collection.svelte';
 
   let settings: Settings = getSettings()
 

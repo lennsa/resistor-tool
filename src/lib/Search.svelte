@@ -7,7 +7,6 @@
   import { getCollection, setSettings } from './settings';
 
   export let settings: Settings
-  let desiredResistanceStr: string = numberToPrettyString(settings.desiredResistance)
   let collection: Array<Resistor>
 
   export let showCollection: boolean
@@ -19,8 +18,6 @@
   let showResultIndex: number = 0
 
   function startSearch () {
-    settings.desiredResistance = prettyStringToNumber(desiredResistanceStr)
-    desiredResistanceStr = numberToPrettyString(settings.desiredResistance)
     settings = setSettings(settings)
     collection = getCollection(settings.selectedCollection)
 
@@ -87,20 +84,33 @@
 
 <form class="card" onsubmit="return false">
   <label for="collection">Sammlung</label>
-  <select id="collection" bind:value={settings.selectedCollection} on:change={stopSearch}>
-     {#each Object.entries(settings.collections) as [id, name]}
-      <option value={id}>
-        {name}
-      </option>
-    {/each}
-  </select>
   <div class="form-row">
-    <button disabled={settings.selectedCollection === null} on:click={openEditCollection}>Sammlung Bearbeiten</button>
-    <button on:click={openAddCollection}>Neue Sammlung</button>
+    <div class="form-row-child fg-2">
+      <select id="collection" bind:value={settings.selectedCollection} on:change={stopSearch}>
+        {#each Object.entries(settings.collections) as [id, name]}
+          <option value={id}>
+            {name}
+          </option>
+        {/each}
+      </select>
+    </div>
+    <div class="form-row-child">
+      <button disabled={settings.selectedCollection === null} on:click={openEditCollection}>Bearbeiten</button>
+    </div>
+    <div class="form-row-child">
+      <button on:click={openAddCollection}>Neue Sammlung</button>
+    </div>
   </div>
 
   <label for="resistor">Gewünschter Widerstand in Ω</label>
-  <input id="resistor" bind:value={desiredResistanceStr} on:input={stopSearch}>
+  <div class="form-row">
+    <div class="form-row-child fg-3">
+      <input id="resistor" bind:value={settings.desiredResistance} on:input={stopSearch}>
+    </div>
+    <div class="form-row-child">
+      <span>{numberToPrettyString(settings.desiredResistance)}Ω</span>
+    </div>
+  </div>
 
   <label for="complexity">Maximale Anzahl an Widerständen</label>
   <input id="complexity" type="number" bind:value={settings.maxComplexity} on:input={stopSearch}>
@@ -112,21 +122,21 @@
   {:else}
     <button on:click={startSearch}>Start</button>
   {/if}
-</form>
 
-{#if state !== "awaitInput"}
-  <p>
-    Suche nach {desiredResistanceStr}Ω Schaltung,
-    Widerstände in der Sammlung: {collection.length},
-    Maximale Anzahl an Widerständen: {settings.maxComplexity}
-  </p>
-  <p>Überprüfte Kombinationen: {nResistors}</p>
-  {#if state === "done"}
-    <p>Fertig!</p>
-  {:else if state === "paused"}
-    <p>Pausiert</p>
+  {#if state !== "awaitInput"}
+    <p>
+      Suche nach {numberToPrettyString(settings.desiredResistance)}Ω Schaltung,
+      Widerstände in der Sammlung: {collection.length},
+      Maximale Anzahl an Widerständen: {settings.maxComplexity}
+    </p>
+    <p>Überprüfte Kombinationen: {nResistors}</p>
+    {#if state === "done"}
+      <p>Fertig!</p>
+    {:else if state === "paused"}
+      <p>Pausiert</p>
+    {/if}
   {/if}
-{/if}
+</form>
 
 {#if resistors.length > 0}
   <h2>Ergebnisse</h2>
@@ -137,3 +147,23 @@
     <Table resistors={resistors} bind:clickedRow={showResultIndex} desiredResistance={settings.desiredResistance} />
   </div>
 {/if}
+
+<style>
+  span {
+    /* line-height: 1.2rem;
+    font-size: 1rem; */
+    /* background-color: #1c1c1c; */
+    border-radius: 8px;
+    padding: .5rem .8rem;
+    align-content: center;
+    text-align: center;
+    display: block;
+    /* font-weight: bold; */
+  }
+
+  /* @media (prefers-color-scheme: light) {
+    span {
+      background-color: #eaeaea;
+    }
+  } */
+</style>

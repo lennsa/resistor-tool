@@ -29,12 +29,16 @@
 
 <style>
 :root {
-  --resistor-width: 2em;
+  --resistor-width: 1.8em;
   --resistor-height: 4em;
   --resistor-border: 4px;
   --resistor-color: rgb(175, 85, 21);
   --resistor-border-color: black;
   --padding: 1em;
+}
+
+* {
+  box-sizing: content-box;
 }
 
 .resistor {
