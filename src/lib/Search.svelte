@@ -21,8 +21,6 @@
     settings = setSettings(settings)
     collection = getCollection(settings.selectedCollection)
 
-    console.log(settings)
-
     // reset output
     state = "searching"
     resistors = []
