@@ -4,5 +4,7 @@ import { viteSingleFile } from "vite-plugin-singlefile"
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [svelte(), viteSingleFile()],
+  base: '/resistor-tool/',
+  // plugins: [svelte(), viteSingleFile()],
+  plugins: [svelte()],
 })
