@@ -1,5 +1,6 @@
 <script lang="ts">
-  import Board from './Board.svelte'
+  import PrettyInput from '../components/PrettyInput.svelte';
+import Board from './Board.svelte'
   import Table from './Table.svelte'
   import { numberToPrettyString, prettyStringToNumber } from './formatting';
   import type { Settings } from './localStorage';
@@ -93,17 +94,17 @@
       </select>
     </div>
     <div class="form-row-child">
-      <button disabled={settings.selectedCollection === null} on:click={openEditCollection}>Bearbeiten</button>
+      <button type="button" disabled={settings.selectedCollection === null} on:click={openEditCollection}>Bearbeiten</button>
     </div>
     <div class="form-row-child">
-      <button on:click={openAddCollection}>Neue Sammlung</button>
+      <button type="button" on:click={openAddCollection}>Neue Sammlung</button>
     </div>
   </div>
 
   <label for="resistor">Gewünschter Widerstand in Ω</label>
   <div class="form-row">
     <div class="form-row-child fg-3">
-      <input id="resistor" bind:value={settings.desiredResistance} on:input={stopSearch}>
+      <PrettyInput id="resistor" bind:value={settings.desiredResistance} on:input={stopSearch} />
     </div>
     <div class="form-row-child">
       <span>{numberToPrettyString(settings.desiredResistance)}Ω</span>

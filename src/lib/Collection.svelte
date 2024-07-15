@@ -3,6 +3,7 @@
   import { addCollection, getCollection, setCollection, setSettings } from './settings';
   import type { Resistor } from './resistor';
   import { numberToPrettyString } from './formatting';
+  import PrettyInput from '../components/PrettyInput.svelte';
 
   export let showCollection: boolean
   export let newCollection: boolean
@@ -10,6 +11,8 @@
   export let settings: Settings
   let collection: Array<Resistor> = newCollection ? [] : getCollection(settings.selectedCollection)
   let name = newCollection ? "" : settings.collections[settings.selectedCollection]
+
+  let importPopup: boolean = false
 
   function saveCollection () {
     if (newCollection) {
@@ -38,6 +41,10 @@
       type: "resistor",
       subResistors: [],
     }]
+  }
+
+  function openImport() {
+    importPopup = true
   }
 
   function deleteResistor(index: number) {
@@ -75,23 +82,30 @@
     {#each collection as resistor, index}
       <tr class="resistor">
         <td>{index + 1}</td>
-        <td><input class="w-100" id="resistor_{index}" type="number" bind:value={resistor.value}></td>
+        <td><PrettyInput clazz="w-100" id="resistor_{index}" bind:value={resistor.value} /></td>
         <td><span class="ta-c">{numberToPrettyString(resistor.value, false, 3)}Ω</span></td>
-        <td><button class="w-100" on:click={() => deleteResistor(index)}>Löschen</button></td>
+        <td><button type="button" class="w-100" on:click={() => deleteResistor(index)}>Löschen</button></td>
       </tr>
     {/each}
   </table>
-  <button on:click={addResistor}>Widerstand Hinzufügen</button>
+  <div class="form-row">
+    <div class="form-row-child">
+      <button on:click={addResistor}>Widerstand Hinzufügen</button>
+    </div>
+    <!-- <div class="form-row-child">
+      <button type="button" on:click={openImport}>Widerstände Importieren (CSV)</button>
+    </div> -->
+  </div>
 
   <div class="form-row">
     <div class="form-row-child">
-      <button disabled={newCollection} on:click={deleteCollection}>Löschen</button>
+      <button type="button" disabled={newCollection} on:click={deleteCollection}>Löschen</button>
     </div>
     <div class="form-row-child">
-      <button on:click={cancelCollection}>Abbrechen</button>
+      <button type="button" on:click={cancelCollection}>Abbrechen</button>
     </div>
     <div class="form-row-child">
-      <button on:click={saveCollection}>Speichern</button>
+      <button type="button" on:click={saveCollection}>Speichern</button>
     </div>
   </div>
 </form>

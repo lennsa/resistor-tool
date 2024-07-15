@@ -1,8 +1,8 @@
-export function numberToPrettyString(n: number, allSign: boolean = false, precision: number = undefined) {
+export function numberToPrettyString(n: number, allSign: boolean = false, precision: number | undefined = undefined) {
   if (n === null) n = 0
 
   let e: number = 0
-  while (Math.abs(n) >= 1000) {
+  while (Math.abs(n) >= 1000 && e < 3) {
       n /= 1000
       e ++
   }
@@ -36,17 +36,20 @@ export function numberToPrettyString(n: number, allSign: boolean = false, precis
 
 export function prettyStringToNumber(str: string) {
   let e: number = 1
-  if (str.indexOf('k') >= 0) {
+  if (str.endsWith('k')) {
     e *= 1000
-  } else if (str.indexOf('M') >= 0) {
+    str = str.slice(0, str.lastIndexOf('k'))
+  } else if (str.endsWith('M')) {
     e *= 1000000
-  } else if (str.indexOf('G') >= 0) {
+    str = str.slice(0, str.lastIndexOf('M'))
+  } else if (str.endsWith('G')) {
     e *= 1000000000
+    str = str.slice(0, str.lastIndexOf('G'))
   }
-  return e * Number(str.replace(/[k,M]/g,''))
+  return e * Number(str)
 }
 
-export function allSign(n: number, precision: number = undefined) {
+export function allSign(n: number, precision: number | undefined = undefined) {
   if (precision !== undefined) {
     let pN: number
     do {

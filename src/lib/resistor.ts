@@ -29,14 +29,6 @@ Array.prototype.pushSorted = function(el: any, compareFn: (a: any, b: any) => nu
   return this.length;
 };
 
-function compareFn(a: Resistor, b: Resistor, desiredResistance: number): number {
-  let dist: number = Math.abs(a.value - desiredResistance) - Math.abs(b.value - desiredResistance)
-  if (dist === 0) {
-    dist = a.complexity - b.complexity
-  }
-  return dist
-}
-
 export class ResistanceGenerator {
   resistorQueue: Array<Resistor>
   resistors: Array<Resistor>
@@ -44,16 +36,24 @@ export class ResistanceGenerator {
   maxComplexity: number
 
   constructor(collection: Array<Resistor>, desiredResistance: number, maxComplexity: number) {
-    this.resistorQueue = collection.slice(0)
+    this.resistorQueue = collection.slice(0).sort((a: Resistor, b: Resistor) => this.compareFn(a, b))
     this.resistors = []
     this.desiredResistance = desiredResistance
     this.maxComplexity = maxComplexity
   }
 
+  compareFn(a: Resistor, b: Resistor): number {
+    let dist: number = Math.abs(a.value - this.desiredResistance) - Math.abs(b.value - this.desiredResistance)
+    if (dist === 0) {
+      dist = a.complexity - b.complexity
+    }
+    return dist
+  }
+
   generateStep(): boolean {
-    if (this.resistorQueue.length === 0) return false
     const resistor1 = this.resistorQueue.shift()
-    this.resistors.pushSorted(resistor1, (a: Resistor, b: Resistor) => compareFn(a, b, this.desiredResistance))
+    if (resistor1 === undefined) return false
+    this.resistors.pushSorted(resistor1, (a: Resistor, b: Resistor) => this.compareFn(a, b))
     if (resistor1.complexity >= this.maxComplexity) return true
     const allowedComplexity = this.maxComplexity - resistor1.complexity
     perm: for (const resistor2 of this.resistors) {
@@ -69,11 +69,11 @@ export class ResistanceGenerator {
 
       if (resistor1.type !== 'chain' || resistor2.type !== 'chain') {
         let chainResistor = chain(resistor1, resistor2)
-        this.resistorQueue.pushSorted(chainResistor, (a: Resistor, b: Resistor) => compareFn(a, b, this.desiredResistance))
+        this.resistorQueue.pushSorted(chainResistor, (a: Resistor, b: Resistor) => this.compareFn(a, b))
       }
       if (resistor1.type !== 'parallel' || resistor2.type !== 'parallel') {
         let parallelResistor = parallel(resistor1, resistor2)
-        this.resistorQueue.pushSorted(parallelResistor, (a: Resistor, b: Resistor) => compareFn(a, b, this.desiredResistance))
+        this.resistorQueue.pushSorted(parallelResistor, (a: Resistor, b: Resistor) => this.compareFn(a, b))
       }
     }
     return true

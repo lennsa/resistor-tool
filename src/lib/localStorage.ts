@@ -4,7 +4,7 @@ export type Settings = {
   desiredResistance: number
   maxComplexity: number
   collections: {[key: string]: string}
-  selectedCollection: string
+  selectedCollection: string | null
 }
 
 export function saveSettingsFile(settings: Settings) {
