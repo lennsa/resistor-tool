@@ -4,16 +4,17 @@
 
   export let clazz: string = ""
   export let id: string
-  export let value: number
+  export let required: boolean = false
+  export let value: number | null
 
-  const dispatch = createEventDispatcher();
-  $: valueString = numberToPrettyString(value)
+  const dispatch = createEventDispatcher()
+  let valueString: string = numberToPrettyString(value)
+  $: valueString = prettyStringToNumber(valueString) !== value ? numberToPrettyString(value) : valueString
 
   function handleInput(event: Event) {
-    let test = prettyStringToNumber(valueString)
-    if (!isNaN(test)) value = test
+    value = prettyStringToNumber(valueString)
     dispatch('input', event, { cancelable: true })
   }
 </script>
 
-<input class={clazz} id={id} bind:value={valueString} on:input={handleInput}>
+<input class={clazz} id={id} required={required} bind:value={valueString} on:input={handleInput}>

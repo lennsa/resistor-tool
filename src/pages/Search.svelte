@@ -1,26 +1,30 @@
 <script lang="ts">
   import PrettyInput from '../components/PrettyInput.svelte';
-import Board from './Board.svelte'
-  import Table from './Table.svelte'
-  import { numberToPrettyString, prettyStringToNumber } from './formatting';
-  import type { Settings } from './localStorage';
-  import { ResistanceGenerator, type Resistor } from './resistor'
-  import { getCollection, setSettings } from './settings';
+  import Board from '../components/Board.svelte'
+  import Table from '../components/Table.svelte'
+  import { numberToPrettyString } from '../lib/formatting';
+  import { ResistanceGenerator, type CollectionItem, type Resistor } from '../lib/resistor'
+  import { getCollection, setSettings, type Settings } from '../lib/settings';
+  import PrettyOutput from '../components/PrettyOutput.svelte';
 
   export let settings: Settings
-  let collection: Array<Resistor>
+  let collection: CollectionItem[]
 
   export let showCollection: boolean
   export let newCollection: boolean
   
   let state: "awaitInput" | "searching" | "done" | "paused" = 'awaitInput'
-  let resistors: Array<Resistor> = []
+  let resistors: Resistor[] = []
   let nResistors: number = 0
   let showResultIndex: number = 0
 
   function startSearch () {
+    if (settings.desiredResistance === null) return
+    if (settings.maxComplexity === null) return
     settings = setSettings(settings)
-    collection = getCollection(settings.selectedCollection)
+    let collectionTry: CollectionItem[] | null = getCollection(settings.selectedCollection)
+    if (collectionTry === null) return
+    collection = collectionTry
 
     // reset output
     state = "searching"
@@ -81,11 +85,11 @@ import Board from './Board.svelte'
 
 <h2>Suche</h2>
 
-<form class="card" onsubmit="return false">
+<form class="card" on:submit|preventDefault={startSearch}>
   <label for="collection">Sammlung</label>
   <div class="form-row">
     <div class="form-row-child fg-2">
-      <select id="collection" bind:value={settings.selectedCollection} on:change={stopSearch}>
+      <select id="collection" required bind:value={settings.selectedCollection} on:change={stopSearch}>
         {#each Object.entries(settings.collections) as [id, name]}
           <option value={id}>
             {name}
@@ -104,22 +108,22 @@ import Board from './Board.svelte'
   <label for="resistor">Gewünschter Widerstand in Ω</label>
   <div class="form-row">
     <div class="form-row-child fg-3">
-      <PrettyInput id="resistor" bind:value={settings.desiredResistance} on:input={stopSearch} />
+      <PrettyInput id="resistor" required bind:value={settings.desiredResistance} on:input={stopSearch} />
     </div>
     <div class="form-row-child">
-      <span>{numberToPrettyString(settings.desiredResistance)}Ω</span>
+      <span><PrettyOutput value={settings.desiredResistance} /></span>
     </div>
   </div>
 
   <label for="complexity">Maximale Anzahl an Widerständen</label>
-  <input id="complexity" type="number" bind:value={settings.maxComplexity} on:input={stopSearch}>
+  <input id="complexity" type="number" required bind:value={settings.maxComplexity} on:input={stopSearch}>
 
   {#if state === "searching"}
-    <button on:click={pauseSearch}>Pause</button>
+    <button type="button" on:click={pauseSearch}>Pause</button>
   {:else if state === "paused"}
-    <button on:click={resumeSearch}>Resume</button>
+    <button type="button" on:click={resumeSearch}>Resume</button>
   {:else}
-    <button on:click={startSearch}>Start</button>
+    <button type="submit">Start</button>
   {/if}
 
   {#if state !== "awaitInput"}
@@ -148,21 +152,11 @@ import Board from './Board.svelte'
 {/if}
 
 <style>
-  span {
-    /* line-height: 1.2rem;
-    font-size: 1rem; */
-    /* background-color: #1c1c1c; */
-    border-radius: 8px;
-    padding: .5rem .8rem;
-    align-content: center;
-    text-align: center;
-    display: block;
-    /* font-weight: bold; */
-  }
-
-  /* @media (prefers-color-scheme: light) {
-    span {
-      background-color: #eaeaea;
-    }
-  } */
+span {
+  border-radius: 8px;
+  padding: .5rem .8rem;
+  align-content: center;
+  text-align: center;
+  display: block;
+}
 </style>

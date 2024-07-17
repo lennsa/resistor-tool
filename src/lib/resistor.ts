@@ -2,7 +2,15 @@ export type Resistor = {
   value: number
   complexity: number
   type: "resistor" | "parallel" | "chain"
-  subResistors: Array<Resistor>
+  subResistors: Resistor[]
+}
+
+export type ResistorMeta = {[key: string]: string}
+
+export type CollectionItem = {
+  resistor: Resistor
+  meta: ResistorMeta
+  active: boolean
 }
 
 Array.prototype.pushSorted = function(el: any, compareFn: (a: any, b: any) => number) {
@@ -29,14 +37,24 @@ Array.prototype.pushSorted = function(el: any, compareFn: (a: any, b: any) => nu
   return this.length;
 };
 
+function getResistors(collection: CollectionItem[]): Resistor[] {
+  let resistors: Resistor[] = []
+  for (const collectionItem of collection) {
+    if (collectionItem.active) {
+      resistors.push(collectionItem.resistor)
+    }
+  }
+  return resistors
+}
+
 export class ResistanceGenerator {
-  resistorQueue: Array<Resistor>
-  resistors: Array<Resistor>
+  resistorQueue: Resistor[]
+  resistors: Resistor[]
   desiredResistance: number
   maxComplexity: number
 
-  constructor(collection: Array<Resistor>, desiredResistance: number, maxComplexity: number) {
-    this.resistorQueue = collection.slice(0).sort((a: Resistor, b: Resistor) => this.compareFn(a, b))
+  constructor(collection: CollectionItem[], desiredResistance: number, maxComplexity: number) {
+    this.resistorQueue = getResistors(collection).sort((a: Resistor, b: Resistor) => this.compareFn(a, b))
     this.resistors = []
     this.desiredResistance = desiredResistance
     this.maxComplexity = maxComplexity
@@ -61,7 +79,6 @@ export class ResistanceGenerator {
 
       // reduce duplicates
       if (resistor1.subResistors.includes(resistor2)) {
-        console.log("sim", resistor2, resistor1)
         for (const subResistor of resistor1.subResistors) {
           if (subResistor !== resistor2) continue perm
         }
@@ -79,7 +96,7 @@ export class ResistanceGenerator {
     return true
   }
 
-  generate(): Array<Resistor> {
+  generate(): Resistor[] {
     let result
     do {
       result = this.generateStep()
@@ -89,7 +106,7 @@ export class ResistanceGenerator {
 }
 
 function chain(resistor1: Resistor, resistor2: Resistor): Resistor {
-  let subResistors: Array<Resistor> = []
+  let subResistors: Resistor[] = []
   if (resistor1.type == "chain") {
     subResistors = subResistors.concat(resistor1.subResistors)
   } else {
@@ -110,7 +127,7 @@ function chain(resistor1: Resistor, resistor2: Resistor): Resistor {
 }
 
 function parallel(resistor1: Resistor, resistor2: Resistor): Resistor {
-  let subResistors: Array<Resistor> = []
+  let subResistors: Resistor[] = []
   if (resistor1.type == "parallel") {
     subResistors = subResistors.concat(resistor1.subResistors)
   } else {

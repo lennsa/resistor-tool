@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { allSign, numberToPrettyString } from "./formatting";
-  import { type Resistor } from "./resistor";
+  import { allSign, numberToPrettyString } from "../lib/formatting";
+  import { type Resistor } from "../lib/resistor";
 
-  export let resistors: Array<Resistor>
+  export let resistors: Resistor[]
   export let desiredResistance: number
   export let clickedRow: number = 0
 

@@ -3,15 +3,32 @@
   line-height: 1.5;
   font-weight: 400;
 
+  --color: rgba(255, 255, 255, 0.87);
+  --background-color: #242424;
+  --primary-color: #151515;
+  --secondary-color: #1c1c1c;
+  --blue: #646cff;
+
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--color);
+  background-color: var(--background-color);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+}
+
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --color: #1a2127;
+    --background-color: #ffffff;
+    --primary-color: #dadada;
+    --secondary-color: #eaeaea;
+    --blue: #747bff;
+  }
 }
 
 * {
@@ -56,29 +73,16 @@ button {
   padding: 0.5rem .8rem;
   font-weight: 500;
   font-family: inherit;
-  background-color: #151515;
+  background-color: var(--primary-color);
   cursor: pointer;
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: var(--blue);
 }
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #1a2127;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #dadada;
-  }
 }
 
 p {
@@ -89,7 +93,6 @@ p {
 form {
   display: flex;
   flex-direction: column;
-  /* gap: .2rem; */
   text-align: left;
 }
 
@@ -116,10 +119,6 @@ form > p {
   justify-content: center;
 }
 
-/* .form-row-child * {
-  width: 100%;
-} */
-
 .fg-2 {
   flex-grow: 2;
 }
@@ -144,14 +143,7 @@ select,
 input {
   font-size: 1rem;
   padding: .5rem .8rem;
-  background-color: #1c1c1c;
+  background-color: var(--secondary-color);
   border: none;
   border-radius: 8px;
-}
-
-@media (prefers-color-scheme: light) {
-  select,
-  input {
-    background-color: #eaeaea;
-  }
 }

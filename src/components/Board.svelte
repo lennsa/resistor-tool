@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { type Resistor } from "./resistor";
+  import { type Resistor } from "../lib/resistor";
   import ResistorElement from "./ResistorElement.svelte";
   import Table from "./Table.svelte";
 
@@ -52,5 +52,4 @@
   bottom: 1em;
   border: var(--resistor-border) solid black;
 }
-
 </style>

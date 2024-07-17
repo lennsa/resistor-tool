@@ -1,5 +1,5 @@
-export function numberToPrettyString(n: number, allSign: boolean = false, precision: number | undefined = undefined) {
-  if (n === null) n = 0
+export function numberToPrettyString(n: number | null, allSign: boolean = false, precision: number | null = null) {
+  if (n === null) return ''
 
   let e: number = 0
   while (Math.abs(n) >= 1000 && e < 3) {
@@ -23,7 +23,7 @@ export function numberToPrettyString(n: number, allSign: boolean = false, precis
       case 3:
           eStr = "G"; break
   }
-  if (precision !== undefined) {
+  if (precision !== null) {
     let pN: number
     do {
       pN = parseFloat(n.toFixed(precision))
@@ -46,11 +46,13 @@ export function prettyStringToNumber(str: string) {
     e *= 1000000000
     str = str.slice(0, str.lastIndexOf('G'))
   }
-  return e * Number(str)
+  let result: number = e * Number(str)
+  if (isNaN(result)) return null
+  return result
 }
 
-export function allSign(n: number, precision: number | undefined = undefined) {
-  if (precision !== undefined) {
+export function allSign(n: number, precision: number | null = null) {
+  if (precision !== null) {
     let pN: number
     do {
       pN = parseFloat(n.toFixed(precision))

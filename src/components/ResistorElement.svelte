@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { numberToPrettyString } from "./formatting";
-  import { type Resistor } from "./resistor";
+  import { numberToPrettyString } from "../lib/formatting";
+  import { type Resistor } from "../lib/resistor";
 
   export let resistor: Resistor
 </script>
