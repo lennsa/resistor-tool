@@ -98,10 +98,10 @@
       </select>
     </div>
     <div class="form-row-child">
-      <button type="button" disabled={settings.selectedCollection === null} on:click={openEditCollection}>Bearbeiten</button>
+      <button type="button" class="secondary" disabled={settings.selectedCollection === null} on:click={openEditCollection}>Bearbeiten</button>
     </div>
     <div class="form-row-child">
-      <button type="button" on:click={openAddCollection}>Neue Sammlung</button>
+      <button type="button" class="secondary" on:click={openAddCollection}>Neue Sammlung</button>
     </div>
   </div>
 

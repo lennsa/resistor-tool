@@ -15,7 +15,7 @@
 <style>
 .board {
   padding: 2em;
-  background-color: #1c1c1c;
+  background-color: var(--input-color);
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -23,12 +23,6 @@
   position: relative;
   border-radius: 8px;
   margin-bottom: .5rem;
-}
-
-@media (prefers-color-scheme: light) {
-  .board {
-    background-color: #eaeaea;
-  }
 }
 
 .board::before {
@@ -39,7 +33,7 @@
   left: calc(50% - 0.5em);
   border-radius: 1em;
   top: 1em;
-  border: var(--resistor-border) solid black;
+  border: var(--resistor-border) solid var(--resistor-border-color);
 }
 
 .board::after {
@@ -50,6 +44,6 @@
   left: calc(50% - 0.5em);
   border-radius: 1em;
   bottom: 1em;
-  border: var(--resistor-border) solid black;
+  border: var(--resistor-border) solid var(--resistor-border-color);
 }
 </style>

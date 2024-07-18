@@ -104,39 +104,41 @@
   <input id="name" required bind:value={name}>
 
   <label for="name">Widerstände</label>
-  <table class="table">
-    <tr>
-      <th>Nr.</th>
-      <th>Widerstand Eingabe</th>
-      <th>Widerstand in Ω</th>
-      <th>Aktiviert</th>
-      <th>Löschen</th>
-    </tr>
-    {#each collection as collectionItem, index}
-      <tr class="resistor">
-        <td>{index + 1}</td>
-        <td><PrettyInput clazz="w-100" id="resistor_{index}" required bind:value={collectionItem.resistor.value} /></td>
-        <td><span class="ta-c"><PrettyOutput value={collectionItem.resistor.value} /></span></td>
-        <td><input id="resistor_active_{index}" type="checkbox" bind:checked={collectionItem.active}></td>
-        <td><button type="button" class="w-100" on:click={() => deleteResistor(index)}>Löschen</button></td>
+  <div class="box">
+    <table class="table">
+      <tr>
+        <th>Nr.</th>
+        <th>Widerstand Eingabe</th>
+        <th>Widerstand in Ω</th>
+        <th>Aktiviert</th>
+        <th>Löschen</th>
       </tr>
-    {/each}
-  </table>
-  <div class="form-row">
-    <div class="form-row-child">
-      <button type="button" on:click={addResistor}>Widerstand Hinzufügen</button>
-    </div>
-    <div class="form-row-child">
-      <button type="button" on:click={openImportPopUp}>Widerstände Importieren (CSV)</button>
+      {#each collection as collectionItem, index}
+        <tr class="resistor">
+          <td>{index + 1}</td>
+          <td><PrettyInput clazz="w-100 inverted" id="resistor_{index}" required bind:value={collectionItem.resistor.value} /></td>
+          <td><span class="ta-c"><PrettyOutput value={collectionItem.resistor.value} /></span></td>
+          <td><input id="resistor_active_{index}" type="checkbox" bind:checked={collectionItem.active}></td>
+          <td><button type="button" class="secondary w-100" on:click={() => deleteResistor(index)}>Löschen</button></td>
+        </tr>
+      {/each}
+    </table>
+    <div class="form-row">
+      <div class="form-row-child">
+        <button type="button" class="secondary" on:click={addResistor}>Widerstand Hinzufügen</button>
+      </div>
+      <div class="form-row-child">
+        <button type="button" class="secondary" on:click={openImportPopUp}>Widerstände Importieren (CSV)</button>
+      </div>
     </div>
   </div>
 
   <div class="form-row">
     <div class="form-row-child">
-      <button type="button" disabled={newCollection} on:click={deleteCollection}>Löschen</button>
+      <button type="button" class="secondary" disabled={newCollection} on:click={deleteCollection}>Löschen</button>
     </div>
     <div class="form-row-child">
-      <button type="button" on:click={cancelCollection}>Abbrechen</button>
+      <button type="button" class="secondary" on:click={cancelCollection}>Abbrechen</button>
     </div>
     <div class="form-row-child">
       <button type="submit">Speichern</button>
@@ -148,9 +150,39 @@
 
 <style>
   table {
-    border-collapse: separate;
-    border-spacing: 1rem 0;
-    margin-left: -1rem;
-    margin-right: -1rem;
+    border-collapse: collapse;
   }
+
+  tr {
+    border-bottom: 1px solid var(--primary-color);
+  }
+
+  th, td {
+    padding: 0.4rem 0.6rem;
+  }
+
+  th:first-child, td:first-child {
+    padding-left: 0;
+  }
+
+  th:last-child, td:last-child {
+    padding-right: 0;
+  }
+
+  .box {
+    display: flex;
+    flex-direction: column;
+    border-radius: 1rem;
+    padding: 1rem;
+    background-color: var(--input-color);
+  }
+  
+  .box > * {
+    margin-bottom: .4rem;
+  }
+
+  .box > *:last-child {
+    margin-bottom: 0;
+  }
+
 </style>

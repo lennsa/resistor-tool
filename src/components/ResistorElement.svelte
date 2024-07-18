@@ -35,6 +35,15 @@
   --resistor-color: rgb(175, 85, 21);
   --resistor-border-color: black;
   --padding: 1em;
+  --text-background-color: rgba(0, 0, 0, .8);
+  --text-color: var(--resistor-color);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --text-background-color: rgba(255, 255, 255, .95);
+    --text-color: rgb(141, 62, 5);
+  }
 }
 
 * {
@@ -54,17 +63,9 @@
 
 .resistor-text {
   width: fit-content;
-  background-color: rgba(0, 0, 0, .8);
-  color: var(--resistor-color);
+  background-color: var(--text-background-color);
+  color: var(--text-color);
   padding: .075em .25em;
-}
-
-@media (prefers-color-scheme: light) {
-  .resistor-text {
-    background-color: rgba(255, 255, 255, .95);
-    /* color: rgba(0, 0, 0, .9); */
-    color: rgb(141, 62, 5);
-  }
 }
 
 .chain-element {

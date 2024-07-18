@@ -4,9 +4,10 @@
   font-weight: 400;
 
   --color: rgba(255, 255, 255, 0.87);
-  --background-color: #242424;
-  --primary-color: #151515;
-  --secondary-color: #1c1c1c;
+  --background-color: #2b2b2b;
+  --primary-color: #0e0e0e;
+  --secondary-color: #151515;
+  --input-color: #202020;
   --blue: #646cff;
 
   color-scheme: light dark;
@@ -25,8 +26,9 @@
   :root {
     --color: #1a2127;
     --background-color: #ffffff;
-    --primary-color: #dadada;
-    --secondary-color: #eaeaea;
+    --primary-color: #9b9bad;
+    --secondary-color: #babad0;
+    --input-color: #e0e0e6;
     --blue: #747bff;
   }
 }
@@ -43,12 +45,10 @@ body {
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  margin: 0;
 }
 
 h2 {
-  font-size: 2.2em;
   margin: 0;
   text-align: left;
 }
@@ -83,6 +83,10 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+button.secondary {
+  background-color: var(--secondary-color);
 }
 
 p {
@@ -139,11 +143,14 @@ form > p {
   width: 100%;
 }
 
-select,
-input {
+select, input {
   font-size: 1rem;
   padding: .5rem .8rem;
-  background-color: var(--secondary-color);
+  background-color: var(--input-color);
   border: none;
   border-radius: 8px;
+}
+
+select.inverted, input.inverted {
+  background-color: var(--background-color);
 }
