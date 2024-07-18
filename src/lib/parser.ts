@@ -18,7 +18,7 @@ export function parse(text: string, delimiter: string, quote: string, hasHeader:
         if (inQuotes) {
             switch (char) {
                 case ESCAPE_CHAR:
-                    current += char
+                    // current += char
                     escapeNext = true
                     break
                 case quote:
