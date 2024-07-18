@@ -5,6 +5,7 @@
   import type { CollectionItem } from '../lib/resistor';
   import PrettyOutput from '../components/PrettyOutput.svelte';
   import { onMount } from 'svelte';
+  import { metaToText } from '../lib/formatting';
 
   export let settings: Settings
 
@@ -131,7 +132,7 @@
         <th>Löschen</th>
       </tr>
       {#each collection as collectionItem, index}
-        <tr class="resistor">
+        <tr class="resistor" title={metaToText(collectionItem.meta)} data-toggle="tooltip">
           <td>{index + 1}</td>
           <td><PrettyInput clazz="w-100 inverted" id="resistor_{index}" required bind:value={collectionItem.resistor.value} /></td>
           <td><span class="ta-c"><PrettyOutput value={collectionItem.resistor.value} /></span></td>

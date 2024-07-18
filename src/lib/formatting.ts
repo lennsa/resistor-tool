@@ -1,3 +1,5 @@
+import type { ResistorMeta } from "./resistor"
+
 export function numberToPrettyString(n: number | null, allSign: boolean = false, precision: number | null = null) {
   if (n === null) return ''
 
@@ -61,4 +63,14 @@ export function allSign(n: number, precision: number | null = null) {
     n = pN
   }
   return (n<0?"":(n===0?"±":"+")) + n
+}
+
+export function metaToText(meta: ResistorMeta): string {
+  let metaString: string = ""
+  for (const [key, value] of Object.entries(meta)) {
+    if (value) {
+      metaString += key + ": " + value + "\n"
+    }
+  }
+  return metaString
 }

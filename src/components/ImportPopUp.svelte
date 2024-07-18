@@ -115,7 +115,7 @@
         <label for="headers">Hat die CSV Datei eine Kopfzeile?</label>
         <span><input type="checkbox" id="headers" bind:checked={hasHeader} on:change={updateHasHeader} />Kopfzeile</span>
 
-        <label for="column">Spalte in der der Widerstand steht</label>
+        <label for="column">Spalte in der der Widerstand Wert steht</label>
         <select id="column" required bind:value={column}>
           {#each header as column}
             <option value={column}>
@@ -126,7 +126,7 @@
 
         <div class="form-row">
           <div class="form-row-child">
-            <button type="button" on:click={closeImportPopUp}>Abbrechen</button>
+            <button type="button" class="secondary" on:click={closeImportPopUp}>Abbrechen</button>
           </div>
           <div class="form-row-child">
             <button type="submit">Importieren</button>

@@ -90,6 +90,15 @@ button.secondary {
   background-color: var(--secondary-color);
 }
 
+button:disabled {
+  color: var(--primary-color);
+  background-color: var(--input-color);
+}
+
+button:hover:disabled {
+  border-color: transparent;
+}
+
 p {
   margin: 0;
   text-align: center;

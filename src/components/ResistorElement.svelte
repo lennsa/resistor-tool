@@ -1,103 +1,130 @@
 <script lang="ts">
-  import { numberToPrettyString } from "../lib/formatting";
-  import { type Resistor } from "../lib/resistor";
+  import { numberToPrettyString, metaToText } from "../lib/formatting";
+  import { type CollectionItem, type Resistor } from "../lib/resistor";
 
   export let resistor: Resistor
+  export let root: boolean = false
+  export let collection: CollectionItem[]
+
+  let meta: string = getMeta()
+
+  function getMeta(): string {
+    if (resistor.type !== "resistor") return ""
+    let collectionItem: CollectionItem | undefined = collection.find((collectionItem: CollectionItem) => collectionItem.resistor === resistor)
+    if (collectionItem === undefined) return ""
+    return metaToText(collectionItem.meta)
+  }
 </script>
 
-{#if resistor.type == "parallel"}
-  <div class="spacer"/>
-  <div class="parallel-element">
-    {#each resistor.subResistors as subResistor}
-      <svelte:self resistor={subResistor}/>
-    {/each}
-  </div>
-  <div class="spacer"/>
-{:else if resistor.type == "chain"}
+{#if root}
   <div class="chain-element">
-    {#each resistor.subResistors as subResistor}
-      <svelte:self resistor={subResistor}/>
-    {/each}
+    <svelte:self resistor={resistor} collection={collection}/>
   </div>
 {:else}
-  <div class="chain-element">
-    <div class="spacer"/>
-    <div class="resistor"><div class="resistor-text">{numberToPrettyString(resistor.value)}Ω</div></div>
-    <div class="spacer"/>
-  </div>
+  {#if resistor.type == "parallel"}
+    <div class="parallel-element">
+      {#each resistor.subResistors as subResistor}
+        <div class="chain-element">
+          <svelte:self resistor={subResistor} collection={collection}/>
+        </div>
+      {/each}
+    </div>
+  {:else if resistor.type == "chain"}
+    {#each resistor.subResistors as subResistor, subIndex}
+      <svelte:self resistor={subResistor} index={subIndex} collection={collection}/>
+    {/each}
+  {:else}
+    <div class="resistor" class:meta={meta} title={meta} data-toggle="tooltip">
+      <div class="resistor-text">{numberToPrettyString(resistor.value)}Ω</div>
+    </div>
+  {/if}
 {/if}
-
 <style>
-:root {
-  --resistor-width: 1.8em;
-  --resistor-height: 4em;
-  --resistor-border: 4px;
-  --resistor-color: rgb(175, 85, 21);
-  --resistor-border-color: black;
-  --padding: 1em;
-  --text-background-color: rgba(0, 0, 0, .8);
-  --text-color: var(--resistor-color);
-}
-
-@media (prefers-color-scheme: light) {
   :root {
-    --text-background-color: rgba(255, 255, 255, .95);
-    --text-color: rgb(141, 62, 5);
+    --resistor-width: 1.8em;
+    --resistor-height: 4em;
+    --resistor-border: 4px;
+    --resistor-color: rgb(175, 85, 21);
+    --resistor-border-color: black;
+    --padding-y: 1em;
+    --padding-x: 2em;
+    --text-background-color: var(--resistor-border-color);
+    --text-color: var(--resistor-color);
   }
-}
 
-* {
-  box-sizing: content-box;
-}
+  @media (prefers-color-scheme: light) {
+    :root {
+      --text-background-color: var(--background-color);
+      --text-color: rgb(141, 62, 5);
+    }
+  }
 
-.resistor {
-  width: var(--resistor-width);
-  height: var(--resistor-height);
-  border: var(--resistor-border) solid var(--resistor-border-color);
-  background-color: var(--resistor-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-}
+  * {
+    box-sizing: content-box;
+  }
 
-.resistor-text {
-  width: fit-content;
-  background-color: var(--text-background-color);
-  color: var(--text-color);
-  padding: .075em .25em;
-}
+  .resistor {
+    width: var(--resistor-width);
+    height: var(--resistor-height);
+    border: var(--resistor-border) solid var(--resistor-border-color);
+    background-color: var(--resistor-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
 
-.chain-element {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  flex-grow: 1;
-}
+  .meta {
+    cursor: help;
+  }
 
-.parallel-element {
-  display: flex;
-  justify-content: center;
-  position: relative;
-  align-items: stretch;
-  gap: calc(var(--padding) * 2);
-}
+  .resistor-text {
+    width: fit-content;
+    font-weight: bold;
+    background-color: var(--text-background-color);
+    color: var(--text-color);
+    padding: .075em .25em;
+  }
 
-.parallel-element::after {
-  position: absolute;
-  content: "";
-  top: calc(0em - var(--resistor-border) / 2);
-  bottom: calc(0em - var(--resistor-border) / 2);
-  left: calc(var(--resistor-width) / 2 + var(--resistor-border) / 2);
-  right: calc(var(--resistor-width) / 2 + var(--resistor-border) / 2);
-  border-top: var(--resistor-border) solid var(--resistor-border-color);
-  border-bottom: var(--resistor-border) solid var(--resistor-border-color);
-}
+  .chain-element {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--padding-y);
+    padding: var(--padding-y) 0;
+    position: relative;
+    flex-grow: 1;
+  }
 
-.spacer {
-  min-height: var(--padding);
-  flex-grow: 1;
-  border-left: var(--resistor-border) solid var(--resistor-border-color);
-}
+  .chain-element::before {
+    pointer-events: none;
+    position: absolute;
+    content: "";
+    top: calc(0em - var(--resistor-border) / 2);
+    bottom: calc(0em - var(--resistor-border) / 2);
+    border-left: var(--resistor-border) solid var(--resistor-border-color);
+    margin-left: calc(- var(--resistor-border) / 2);
+  }
+
+  .parallel-element {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: calc(var(--padding-x));
+    position: relative;
+  }
+
+  .parallel-element::before {
+    pointer-events: none;
+    position: absolute;
+    content: "";
+    top: calc(0em - var(--resistor-border) / 2);
+    bottom: calc(0em - var(--resistor-border) / 2);
+    left: calc(var(--resistor-width) / 2 + var(--resistor-border) / 2);
+    right: calc(var(--resistor-width) / 2 + var(--resistor-border) / 2);
+    border-top: var(--resistor-border) solid var(--resistor-border-color);
+    border-bottom: var(--resistor-border) solid var(--resistor-border-color);
+    background-color: var(--input-color);
+  }
 </style>

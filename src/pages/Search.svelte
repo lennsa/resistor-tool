@@ -144,7 +144,7 @@
 {#if resistors.length > 0}
   <h2>Ergebnisse</h2>
   <div class="card">
-    <Board resistor={resistors[showResultIndex]} desiredResistance={settings.desiredResistance} />
+    <Board resistor={resistors[showResultIndex]} collection={collection} />
   </div>
   <div class="card">
     <Table resistors={resistors} bind:clickedRow={showResultIndex} desiredResistance={settings.desiredResistance} />
