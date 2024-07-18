@@ -12,7 +12,7 @@
 
   export let showCollection: boolean
   export let newCollection: boolean
-  
+
   let state: "awaitInput" | "searching" | "done" | "paused" = 'awaitInput'
   let resistors: Resistor[] = []
   let nResistors: number = 0

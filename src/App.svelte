@@ -13,8 +13,8 @@
   <h1>Resistor-Tool</h1>
 
   {#if showCollection}
-    <Collection bind:settings={settings} bind:showCollection={showCollection} bind:newCollection={newCollection} /> 
+    <Collection bind:settings bind:showCollection bind:newCollection /> 
   {:else}
-    <Search bind:settings={settings} bind:showCollection={showCollection} bind:newCollection={newCollection} />
+    <Search bind:settings bind:showCollection bind:newCollection />
   {/if}
 </main>

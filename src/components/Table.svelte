@@ -48,20 +48,10 @@ tr.resistor {
 }
 
 tr.resistor:hover {
-  background-color: #1c1c1c;
+  background-color: var(--input-color);
 }
 
 tr.resistor.selected {
-  background-color: #151515;
-}
-
-@media (prefers-color-scheme: light) {
-  tr.resistor:hover {
-    background-color: #eaeaea;
-  }
-
-  tr.resistor.selected {
-    background-color: #dadada;
-  }
+  background-color: var(--primary-color);
 }
 </style>

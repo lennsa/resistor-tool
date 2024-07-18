@@ -55,7 +55,7 @@ export function parse(text: string, delimiter: string, quote: string, hasHeader:
     if (data.length === 0) return [[], []]
 
     // microsoft reeeee
-    data = data.map((rowData) => rowData.map((cellData) => cellData.trim()))
+    data = data.map((rowData) => rowData.map((cellData) => cellData.trim().slice(0, 32)))
     
     // microsoft reeeee
     if (data.length > 1 && data[0].length === 1 && data[1].length > 1) {

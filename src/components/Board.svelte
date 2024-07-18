@@ -1,16 +1,13 @@
 <script lang="ts">
   import { type Resistor } from "../lib/resistor";
   import ResistorElement from "./ResistorElement.svelte";
-  import Table from "./Table.svelte";
 
   export let resistor: Resistor
-  export let desiredResistance: number
 </script>
 
 <div class="board">
   <ResistorElement resistor={resistor} />
 </div>
-<Table resistors={[resistor]} desiredResistance={desiredResistance} />
 
 <style>
 .board {
@@ -22,7 +19,6 @@
   align-items: center;
   position: relative;
   border-radius: 8px;
-  margin-bottom: .5rem;
 }
 
 .board::before {
@@ -42,7 +38,7 @@
   width: calc(1em - var(--resistor-border) * 2);
   height: calc(1em - var(--resistor-border) * 2);
   left: calc(50% - 0.5em);
-  border-radius: 1em;
+  border-radius: 6px;
   bottom: 1em;
   border: var(--resistor-border) solid var(--resistor-border-color);
 }

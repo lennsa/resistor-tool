@@ -4,11 +4,12 @@
   import Import from '../components/ImportPopUp.svelte';
   import type { CollectionItem } from '../lib/resistor';
   import PrettyOutput from '../components/PrettyOutput.svelte';
+  import { onMount } from 'svelte';
+
+  export let settings: Settings
 
   export let showCollection: boolean
   export let newCollection: boolean
-
-  export let settings: Settings
 
   let collection: CollectionItem[]
   let id: string
@@ -67,6 +68,7 @@
       meta: {},
       active: true,
     }]
+    handleScroll()
   }
 
   function openImportPopUp() {
@@ -75,11 +77,13 @@
 
   function importCollection(event: CustomEvent<CollectionItem[]>) {
     collection = [...collection, ...event.detail]
+    handleScroll()
   }
 
   function deleteResistor(index: number) {
     collection.splice(index, 1)
     collection = [...collection]
+    handleScroll()
   }
 
   function deleteCollection() {
@@ -91,7 +95,20 @@
     newCollection = false
     showCollection = false
   }
+
+  let scrolledToBottom = false
+
+  function handleScroll() {
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement
+    scrolledToBottom = scrollTop + clientHeight >= scrollHeight
+  }
+
+  onMount(() => {
+    handleScroll()
+  })
 </script>
+
+<svelte:window on:scroll={handleScroll} />
 
 {#if newCollection}
   <h2>Neue Sammlung</h2>
@@ -133,7 +150,7 @@
     </div>
   </div>
 
-  <div class="form-row">
+  <div class="form-row stick" class:bottom={scrolledToBottom}>
     <div class="form-row-child">
       <button type="button" class="secondary" disabled={newCollection} on:click={deleteCollection}>Löschen</button>
     </div>
@@ -146,7 +163,7 @@
   </div>
 </form>
 
-<Import bind:importPopUpOpen={importPopUpOpen} on:import={importCollection} />
+<Import bind:importPopUpOpen on:import={importCollection} />
 
 <style>
   table {
@@ -154,7 +171,7 @@
   }
 
   tr {
-    border-bottom: 1px solid var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
   }
 
   th, td {
@@ -172,7 +189,7 @@
   .box {
     display: flex;
     flex-direction: column;
-    border-radius: 1rem;
+    border-radius: 6px;
     padding: 1rem;
     background-color: var(--input-color);
   }
@@ -185,4 +202,16 @@
     margin-bottom: 0;
   }
 
+  .stick {
+    position: sticky;
+    bottom: 1.8rem;
+    box-shadow:
+      0 0.5rem 0 1.3rem var(--background-color),
+      0 -1rem 0.5rem 0  var(--primary-color);
+    background-color: var(--background-color);
+  }
+
+  .stick.bottom {
+    box-shadow: none;
+  }
 </style>

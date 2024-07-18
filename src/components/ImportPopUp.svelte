@@ -1,5 +1,4 @@
 <script lang="ts">
-  // import { parse } from 'csv-parse';
   import { createEventDispatcher } from "svelte";
   import { type CollectionItem, type ResistorMeta } from "../lib/resistor.js";
   import { prettyStringToNumber } from "../lib/formatting.js";
@@ -8,6 +7,7 @@
   export let importPopUpOpen: boolean
 
   const dispatch = createEventDispatcher();
+
   let files: FileList
   let delimiter: string
   let quote: string
@@ -47,15 +47,16 @@
     if (!column) return
     let collection: CollectionItem[] = []
     for (const meta of metaList) {
+      let value =  prettyStringToNumber(meta[column]) || 0
       collection.push({
         resistor: {
-          value: prettyStringToNumber(meta[column]) || 0,
+          value: value,
           complexity: 1,
           type: "resistor",
           subResistors: [],
         },
         meta: meta,
-        active: true,
+        active: value > 0,
       })
     }
     dispatch('import', collection, { cancelable: true })
