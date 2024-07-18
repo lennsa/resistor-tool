@@ -9,7 +9,7 @@
 
   const dispatch = createEventDispatcher()
   let valueString: string = numberToPrettyString(value)
-  $: valueString = prettyStringToNumber(valueString) !== value ? numberToPrettyString(value) : valueString
+  // $: valueString = prettyStringToNumber(valueString) !== value ? numberToPrettyString(value) : valueString
 
   function handleInput(event: Event) {
     value = prettyStringToNumber(valueString)
