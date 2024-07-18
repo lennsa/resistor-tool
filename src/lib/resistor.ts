@@ -39,9 +39,11 @@ Array.prototype.pushSorted = function(el: any, compareFn: (a: any, b: any) => nu
 
 function getResistors(collection: CollectionItem[]): Resistor[] {
   let resistors: Resistor[] = []
+  let values: number[] = []
   for (const collectionItem of collection) {
-    if (collectionItem.active) {
+    if (collectionItem.active && !(collectionItem.resistor.value in values)) {
       resistors.push(collectionItem.resistor)
+      values.push(collectionItem.resistor.value)
     }
   }
   return resistors
