@@ -18,16 +18,22 @@
 
 {#if root}
   <div class="chain-element">
-    <svelte:self resistor={resistor} collection={collection}/>
+    <div>
+      <svelte:self resistor={resistor} collection={collection}/>
+    </div>
   </div>
 {:else}
   {#if resistor.type == "parallel"}
     <div class="parallel-element">
-      {#each resistor.subResistors as subResistor}
-        <div class="chain-element">
-          <svelte:self resistor={subResistor} collection={collection}/>
-        </div>
-      {/each}
+      <div>
+        {#each resistor.subResistors as subResistor}
+          <div class="chain-element">
+            <div>
+              <svelte:self resistor={subResistor} collection={collection}/>
+            </div>
+          </div>
+        {/each}
+      </div>
     </div>
   {:else if resistor.type == "chain"}
     {#each resistor.subResistors as subResistor, subIndex}
@@ -48,14 +54,14 @@
     --resistor-border-color: black;
     --padding-y: 1em;
     --padding-x: 2em;
+    --blob: 0.8em;
     --text-background-color: var(--resistor-border-color);
     --text-color: var(--resistor-color);
   }
 
   @media (prefers-color-scheme: light) {
     :root {
-      --text-background-color: var(--background-color);
-      --text-color: rgb(141, 62, 5);
+      --resistor-color: rgb(230, 119, 39);
     }
   }
 
@@ -87,6 +93,11 @@
   }
 
   .chain-element {
+    position: relative;
+    flex-grow: 1;
+  }
+
+  .chain-element > div {
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -94,10 +105,10 @@
     gap: var(--padding-y);
     padding: var(--padding-y) 0;
     position: relative;
-    flex-grow: 1;
+    height: calc(100% - var(--padding-y) * 2);
   }
 
-  .chain-element::before {
+  .chain-element > div::before {
     pointer-events: none;
     position: absolute;
     content: "";
@@ -107,7 +118,37 @@
     margin-left: calc(- var(--resistor-border) / 2);
   }
 
+  .chain-element:not(:last-child):not(:first-child)::before {
+    pointer-events: none;
+    position: absolute;
+    content: "";
+    top: calc(var(--blob) / -2);
+    left: calc(50% - var(--blob) / 2);
+    width: calc(var(--blob));
+    height: calc(var(--blob));
+    border-radius: var(--blob);
+    background-color: var(--resistor-border-color);
+    z-index: 1;
+  }
+
+  .chain-element:not(:last-child):not(:first-child)::after {
+    pointer-events: none;
+    position: absolute;
+    content: "";
+    bottom: calc(var(--blob) / -2);
+    left: calc(50% - var(--blob) / 2);
+    width: calc(var(--blob));
+    height: calc(var(--blob));
+    border-radius: var(--blob);
+    background-color: var(--resistor-border-color);
+    z-index: 1;
+  }
+
   .parallel-element {
+    position: relative;
+  }
+
+  .parallel-element > div {
     display: flex;
     justify-content: center;
     align-items: stretch;
@@ -115,7 +156,7 @@
     position: relative;
   }
 
-  .parallel-element::before {
+  .parallel-element > div::before {
     pointer-events: none;
     position: absolute;
     content: "";
@@ -127,4 +168,31 @@
     border-bottom: var(--resistor-border) solid var(--resistor-border-color);
     background-color: var(--input-color);
   }
+
+  .parallel-element::before {
+    pointer-events: none;
+    position: absolute;
+    content: "";
+    top: calc(var(--blob) / -2);
+    left: calc(50% - var(--blob) / 2);
+    width: calc(var(--blob));
+    height: calc(var(--blob));
+    border-radius: var(--blob);
+    background-color: var(--resistor-border-color);
+    z-index: 1;
+  }
+
+  .parallel-element::after {
+    pointer-events: none;
+    position: absolute;
+    content: "";
+    bottom: calc(var(--blob) / -2);
+    left: calc(50% - var(--blob) / 2);
+    width: calc(var(--blob));
+    height: calc(var(--blob));
+    border-radius: var(--blob);
+    background-color: var(--resistor-border-color);
+    z-index: 1;
+  }
+
 </style>
