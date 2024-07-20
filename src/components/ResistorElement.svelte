@@ -7,6 +7,9 @@
   export let collection: CollectionItem[]
 
   let meta: string = getMeta()
+  let contentWidth: {[key: number]: number} = {}
+
+  $: console.log(resistor, contentWidth)
 
   function getMeta(): string {
     if (resistor.type !== "resistor") return ""
@@ -17,8 +20,8 @@
 </script>
 
 {#if root}
-  <div class="chain-element">
-    <div>
+  <div class="chain-element" style:--content-width={contentWidth[0] + "px"}>
+    <div bind:clientWidth={contentWidth[0]}>
       <svelte:self resistor={resistor} collection={collection}/>
     </div>
   </div>
@@ -26,9 +29,9 @@
   {#if resistor.type == "parallel"}
     <div class="parallel-element">
       <div>
-        {#each resistor.subResistors as subResistor}
-          <div class="chain-element">
-            <div>
+        {#each resistor.subResistors as subResistor, i}
+          <div class="chain-element" style:--content-width={contentWidth[i] + "px"}>
+            <div bind:clientWidth={contentWidth[i]}>
               <svelte:self resistor={subResistor} collection={collection}/>
             </div>
           </div>
@@ -36,8 +39,8 @@
       </div>
     </div>
   {:else if resistor.type == "chain"}
-    {#each resistor.subResistors as subResistor, subIndex}
-      <svelte:self resistor={subResistor} index={subIndex} collection={collection}/>
+    {#each resistor.subResistors as subResistor}
+      <svelte:self resistor={subResistor} collection={collection}/>
     {/each}
   {:else}
     <div class="resistor" class:meta={meta} title={meta} data-toggle="tooltip">
@@ -95,17 +98,30 @@
   .chain-element {
     position: relative;
     flex-grow: 1;
+    width: var(--resistor-width);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .chain-element:not(:first-child) {
+    margin-left: calc(var(--content-width) / 2 - var(--resistor-width) / 2 + var(--padding-x) / 2);
+  }
+
+  .chain-element:not(:last-child) {
+    margin-right: calc(var(--content-width) / 2 - var(--resistor-width) / 2 + var(--padding-x) / 2);
   }
 
   .chain-element > div {
     display: flex;
     justify-content: center;
-    flex-direction: column;
     align-items: center;
+    flex-direction: column;
     gap: var(--padding-y);
     padding: var(--padding-y) 0;
     position: relative;
     height: calc(100% - var(--padding-y) * 2);
+    width: fit-content;
   }
 
   .chain-element > div::before {
@@ -152,7 +168,7 @@
     display: flex;
     justify-content: center;
     align-items: stretch;
-    gap: calc(var(--padding-x));
+    /* gap: var(--padding-x); */
     position: relative;
   }
 
