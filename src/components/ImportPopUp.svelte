@@ -47,7 +47,8 @@
     if (!column) return
     let collection: CollectionItem[] = []
     for (const meta of metaList) {
-      let value =  prettyStringToNumber(meta[column]) || 0
+      let value =  prettyStringToNumber(meta[column])
+      if (value === null) continue
       collection.push({
         resistor: {
           value: value,
@@ -56,7 +57,7 @@
           subResistors: [],
         },
         meta: meta,
-        active: value > 0,
+        active: true,
       })
     }
     dispatch('import', collection, { cancelable: true })

@@ -213,6 +213,6 @@
   }
 
   .stick.bottom {
-    box-shadow: none;
+    box-shadow: 0 0.5rem 0 1.3rem var(--background-color);
   }
 </style>

@@ -37,6 +37,7 @@ export function numberToPrettyString(n: number | null, allSign: boolean = false,
 }
 
 export function prettyStringToNumber(str: string) {
+  if (!str) return null
   let e: number = 1
   if (str.endsWith('k')) {
     e *= 1000

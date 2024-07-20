@@ -55,7 +55,7 @@ export function parse(text: string, delimiter: string, quote: string, hasHeader:
     if (data.length === 0) return [[], []]
 
     // microsoft reeeee
-    data = data.map((rowData) => rowData.map((cellData) => cellData.trim().slice(0, 32)))
+    data = data.map((rowData) => rowData.map((cellData) => cellData.trim().slice(0, 64)))
     
     // microsoft reeeee
     if (data.length > 1 && data[0].length === 1 && data[1].length > 1) {
@@ -65,6 +65,7 @@ export function parse(text: string, delimiter: string, quote: string, hasHeader:
     let keys: string[]
     if (hasHeader) {
         keys = data[0]
+        keys = keys.map((key: string, index: number) => key ? key : index.toString())
         data.splice(0, 1)
     } else {
         keys = Array.from({length: data[0].length}, (_, i) => i.toString())
@@ -72,13 +73,15 @@ export function parse(text: string, delimiter: string, quote: string, hasHeader:
 
     let metaList: ResistorMeta[] = []
     for (const values of data) {
+
         // microsoft reeeee
         if (values.length !== keys.length) continue
+
         let meta: ResistorMeta = {}
         for(let i = 0; i < keys.length; i++) {
-            // microsoft reeeee
-            if (keys[i] === "") continue
-            meta[keys[i]] = values[i]
+            if (values[i]) {
+                meta[keys[i]] = values[i]
+            }
         }
         metaList.push(meta)
     }
