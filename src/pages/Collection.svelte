@@ -1,6 +1,7 @@
 <script lang="ts">
   import { addCollection, getCollection, setCollection, setSettings, type Settings } from '../lib/settings';
   import PrettyInput from '../components/PrettyInput.svelte';
+  import Error from '../components/Error.svelte';
   import Import from '../components/ImportPopUp.svelte';
   import type { CollectionItem } from '../lib/resistor';
   import PrettyOutput from '../components/PrettyOutput.svelte';
@@ -12,9 +13,11 @@
   export let showCollection: boolean
   export let newCollection: boolean
 
-  let collection: CollectionItem[]
+  
+  let collection: CollectionItem[] = []
   let id: string
   let name: string
+  let error: string = ""
   
   if (newCollection) {
     collection = []
@@ -26,12 +29,12 @@
     } else {
       let collectionTry = getCollection(settings.selectedCollection)
       if (!collectionTry) {
-        cancelCollection()
+        error = "Sammlung konnte nicht geladen werden"
       } else {
         collection = collectionTry
-        name = settings.collections[settings.selectedCollection]
-        id = settings.selectedCollection
       }
+      name = settings.collections[settings.selectedCollection]
+      id = settings.selectedCollection
     }
   } else {
     cancelCollection()
@@ -39,13 +42,33 @@
 
   let importPopUpOpen: boolean = false
 
-  function saveCollection () {
+  function saveCollection(): void {
     if (newCollection) {
       if (name === "") name = "Sammlung " + id
-      settings = addCollection(settings, id, name, collection)
+      try {
+        settings = addCollection(settings, id, name, collection)
+      } catch (_e) {
+        let e: Error = _e as Error
+        if (e.name === "QuotaExceededError") {
+          error = "Nicht genug Speicherplatz im lokalem Browser Speicher."
+        } else {
+          error = e.message
+        }
+        return
+      }
       settings.selectedCollection = id
     } else {
-      settings = setCollection(settings, id, collection)
+      try {
+        settings = setCollection(settings, id, collection)
+      } catch (_e) {
+        let e: Error = _e as Error
+        if (e.name === "QuotaExceededError") {
+          error = "Nicht genug Speicherplatz im lokalem Browser Speicher."
+        } else {
+          error = e.name + ":<br>" + e.message
+        }
+        return
+      }
     }
     settings.collections[id] = name
     settings = setSettings(settings)
@@ -146,7 +169,7 @@
         <button type="button" class="secondary" on:click={addResistor}>Widerstand Hinzufügen</button>
       </div>
       <div class="form-row-child">
-        <button type="button" class="secondary" on:click={openImportPopUp}>Widerstände Importieren (CSV)</button>
+        <button type="button" class="secondary" on:click={openImportPopUp}>Widerstände Importieren (txt/csv)</button>
       </div>
     </div>
   </div>
@@ -164,6 +187,7 @@
   </div>
 </form>
 
+<Error bind:message={error} popup={true} />
 <Import bind:importPopUpOpen on:import={importCollection} />
 
 <style>

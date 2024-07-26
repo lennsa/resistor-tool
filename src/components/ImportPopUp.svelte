@@ -90,7 +90,7 @@
   <div class="wrapper">
     <div class="popup">
       
-      <h2>Widerstände Importieren (CSV)</h2>
+      <h2>Widerstände Importieren (txt/csv)</h2>
 
       <form class="card" on:submit|preventDefault={importCollection}>
         <label for="file">File</label>
@@ -113,7 +113,7 @@
           <option value="'">'</option>
         </select>
 
-        <label for="headers">Hat die CSV Datei eine Kopfzeile?</label>
+        <label for="headers">Hat die Datei eine Kopfzeile?</label>
         <span><input type="checkbox" id="headers" bind:checked={hasHeader} on:change={updateHasHeader} />Kopfzeile</span>
 
         <label for="column">Spalte in der der Widerstand Wert steht</label>
@@ -141,6 +141,7 @@
 
 <style>
   .wrapper {
+    z-index: 1;
     position: absolute;
     left: 0;
     right: 0;
